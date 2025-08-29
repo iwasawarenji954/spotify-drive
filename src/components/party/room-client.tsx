@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import NowPlaying from "@/components/party/now-playing";
 import LikeButton from "@/components/party/like-button";
 import SearchTracks from "@/components/party/search-tracks";
@@ -8,11 +8,34 @@ import type { TrackMock } from "@/app/party/[partyId]/search-actions";
 
 export default function RoomClient({ partyId }: { partyId: string }) {
   const [queue, setQueue] = useState<TrackMock[]>([]);
+  const [current, setCurrent] = useState<TrackMock | null>(null);
 
   const onAdd = (t: TrackMock) => {
     setQueue((prev) => {
       if (prev.some((p) => p.id === t.id)) return prev;
+      if (current && current.id === t.id) return prev;
       return [...prev, t];
+    });
+  };
+
+  const startPlayback = () => {
+    setQueue((prev) => {
+      if (prev.length === 0) return prev;
+      const [head, ...rest] = prev;
+      setCurrent(head);
+      return rest;
+    });
+  };
+
+  const nextTrack = () => {
+    setQueue((prev) => {
+      if (prev.length === 0) {
+        setCurrent(null);
+        return prev;
+      }
+      const [head, ...rest] = prev;
+      setCurrent(head);
+      return rest;
     });
   };
 
@@ -21,14 +44,42 @@ export default function RoomClient({ partyId }: { partyId: string }) {
 
   return (
     <>
-      <NowPlaying
-        title="Mock Song"
-        artist="Mock Artist"
-        album="Mock Album"
-        imageUrl="/vercel.svg"
-      />
+      {current ? (
+        <NowPlaying
+          title={current.title}
+          artist={current.artist}
+          album={current.album}
+          imageUrl={current.imageUrl}
+        />
+      ) : (
+        <section className="rounded-lg border border-foreground/15 p-4">
+          <h2 className="font-medium mb-2">再生中</h2>
+          <div className="opacity-70 text-sm">再生中の曲はありません。</div>
+        </section>
+      )}
 
-      <LikeButton trackId="mock-track-1" initialCount={0} />
+      {current && <LikeButton trackId={current.id} initialCount={0} />}
+
+      <div className="flex gap-2">
+        {!current && hasQueue && (
+          <button
+            type="button"
+            onClick={startPlayback}
+            className="rounded-md bg-foreground text-background px-4 py-2"
+          >
+            再生開始
+          </button>
+        )}
+        {current && (
+          <button
+            type="button"
+            onClick={nextTrack}
+            className="rounded-md border border-foreground/20 px-4 py-2 hover:bg-foreground/10"
+          >
+            次の曲へ
+          </button>
+        )}
+      </div>
 
       <SearchTracks partyId={partyId} onAdd={onAdd} />
 
@@ -72,4 +123,3 @@ export default function RoomClient({ partyId }: { partyId: string }) {
     </>
   );
 }
-
