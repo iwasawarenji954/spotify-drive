@@ -1,0 +1,50 @@
+// Data source: Supabase (PostgreSQL)
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Client generator (not used until `prisma generate`)
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum PartyStatus {
+  ACTIVE
+  ENDED
+}
+
+model Party {
+  id          String       @id @default(uuid())
+  code        String       @unique
+  hostUserId  String
+  playlistId  String?
+  status      PartyStatus  @default(ACTIVE)
+  createdAt   DateTime     @default(now())
+  endedAt     DateTime?
+
+  tracks      PartyTrack[]
+}
+
+model PartyTrack {
+  id        String   @id @default(uuid())
+  partyId   String
+  trackId   String   // Spotify Track ID
+  addedBy   String?
+  addedAt   DateTime @default(now())
+
+  party     Party    @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  likes     Like[]
+
+  @@unique([partyId, trackId])
+}
+
+model Like {
+  id           String   @id @default(uuid())
+  partyTrackId String
+  userId       String? // optional: anonymous like
+  createdAt    DateTime @default(now())
+
+  partyTrack   PartyTrack @relation(fields: [partyTrackId], references: [id], onDelete: Cascade)
+}
+

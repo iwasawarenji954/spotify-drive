@@ -114,6 +114,25 @@
 
 ---
 
+## データ層（初期準備）
+
+- `prisma/schema.prisma`
+  - 種別: 追加
+  - 役割: Prisma スキーマ。`Party` / `PartyTrack` / `Like` と `PartyStatus` を定義。
+  - 補足: provider は `postgresql`、`DATABASE_URL` を参照。まだアプリから未接続。
+
+- `supabase/schema.sql`
+  - 種別: 追加
+  - 役割: Supabase(PostgreSQL) 向けの初期テーブル定義SQL。Prismaと同等の構造。
+  - 補足: ユニーク・FK・インデックス定義を含む。実行は後続フェーズで実施。
+
+- `docs/DATABASE.md`
+  - 種別: 追加
+  - 役割: DB設計の意図、テーブル概要、適用手順（例）を整理。
+  - 補足: 今後の拡張候補も記載。
+
+---
+
 ## 環境変数（再掲）
 - `NEXTAUTH_URL`: 例 `http://127.0.0.1:3000`
 - `NEXTAUTH_SECRET`: ランダム文字列（例: `openssl rand -base64 32`）
