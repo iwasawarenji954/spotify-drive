@@ -136,7 +136,7 @@
 ## データ接続準備（Prisma Client導入のみ）
 
 - `package.json`
-  - 変更点: スクリプト追加 `prisma:generate` / `prisma:validate` / `prisma:studio`。
+  - 変更点: スクリプト追加 `postinstall: prisma generate`, `prisma:generate`, `prisma:validate`, `prisma:studio`。
   - 目的: ローカルでのPrisma操作を簡易化。
 
 - 依存関係
