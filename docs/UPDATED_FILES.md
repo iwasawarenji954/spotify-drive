@@ -133,6 +133,23 @@
 
 ---
 
+## 検索UI（モック）
+
+- `src/app/party/[partyId]/search-actions.ts`
+  - 種別: 追加
+  - 役割: サーバーアクションでモック検索を提供。フォームの `q` を受け取り、ダミーの `TrackMock[]` を返す `SearchState` を生成。
+  - 補足: 外部APIには接続せず、デプロイ可能性を維持。
+
+- `src/components/party/search-tracks.tsx`
+  - 種別: 追加
+  - 役割: クライアントコンポーネント。`useActionState` で上記サーバーアクションを呼び出し、検索結果を一覧表示。「追加」は未実装（ボタンは無効）。
+
+- `src/app/party/[partyId]/page.tsx`
+  - 変更点: 検索セクションを追加し、`<SearchTracks partyId={partyId} />` を表示。
+  - 目的: パーティールーム内で検索の骨組みを体験可能に。
+
+---
+
 ## 環境変数（再掲）
 - `NEXTAUTH_URL`: 例 `http://127.0.0.1:3000`
 - `NEXTAUTH_SECRET`: ランダム文字列（例: `openssl rand -base64 32`）

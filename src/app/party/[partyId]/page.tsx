@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
+import SearchTracks from "@/components/party/search-tracks";
 
 export default async function PartyRoom({
   params,
@@ -25,10 +26,9 @@ export default async function PartyRoom({
         <button className="rounded-full bg-[#1DB954] text-white px-6 py-3 font-medium hover:opacity-90">
           いいね！
         </button>
-        <button className="rounded-full border border-foreground/20 px-6 py-3 hover:bg-foreground/10">
-          曲を検索・追加
-        </button>
       </div>
+
+      <SearchTracks partyId={partyId} />
     </div>
   );
 }
