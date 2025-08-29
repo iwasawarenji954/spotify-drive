@@ -150,6 +150,22 @@
 
 ---
 
+## 再生中・いいね（骨組み）
+
+- `src/components/party/now-playing.tsx`
+  - 種別: 追加
+  - 役割: 再生中の曲情報カード（タイトル/アーティスト/アルバム/画像）を表示（モック）。
+
+- `src/components/party/like-button.tsx`
+  - 種別: 追加
+  - 役割: 「いいね！」ボタンとカウント表示のクライアントコンポーネント。内部状態で加算、永続化やリアルタイムは未実装。
+
+- `src/app/party/[partyId]/page.tsx`
+  - 変更点: 上記の `NowPlaying` と `LikeButton` を組み込み、骨組みを表示。
+  - 目的: 外部APIやDBに依存せず体験できる最小UIを提供。
+
+---
+
 ## 環境変数（再掲）
 - `NEXTAUTH_URL`: 例 `http://127.0.0.1:3000`
 - `NEXTAUTH_SECRET`: ランダム文字列（例: `openssl rand -base64 32`）
