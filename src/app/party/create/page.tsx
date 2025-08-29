@@ -9,8 +9,32 @@ export default async function CreatePartyPage() {
   return (
     <div className="max-w-xl mx-auto p-6 flex flex-col gap-6">
       <h1 className="text-xl font-semibold">パーティーを作成</h1>
-      <p className="opacity-70">プレイリスト選択などは後で実装します。</p>
+      <p className="opacity-70">まずはモックとして参加コードを自動生成します。</p>
+
+      <form
+        action={async () => {
+          "use server";
+          // モック: 6文字の英数字コードを生成して遷移
+          const code = Math.random().toString(36).slice(2, 8).toUpperCase();
+          redirect(`/party/${code}`);
+        }}
+      >
+        <button
+          type="submit"
+          className="rounded-md bg-foreground text-background px-4 py-2"
+        >
+          参加コードを発行してルームへ
+        </button>
+      </form>
+
+      <div className="rounded-lg border border-foreground/15 p-4">
+        <h2 className="font-medium mb-2">今後の予定</h2>
+        <ul className="list-disc pl-5 space-y-1 text-sm opacity-80">
+          <li>ホストのSpotifyプレイリスト選択（新規作成/既存選択）</li>
+          <li>共有用URLと参加コードの表示</li>
+          <li>Supabase/Prismaへパーティー情報を保存</li>
+        </ul>
+      </div>
     </div>
   );
 }
-
