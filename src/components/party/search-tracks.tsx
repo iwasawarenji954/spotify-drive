@@ -7,9 +7,11 @@ import { searchTracksAction } from "@/app/party/[partyId]/search-actions";
 export default function SearchTracks({
   partyId,
   onAdd,
+  existingIds = [],
 }: {
   partyId: string;
   onAdd?: (t: TrackMock) => void;
+  existingIds?: string[];
 }) {
   const initial: SearchState = { query: "", results: [] };
   const [state, formAction, pending] = useActionState(searchTracksAction, initial);
@@ -39,7 +41,9 @@ export default function SearchTracks({
         <p className="opacity-70 text-sm">キーワードを入力して検索してください（API未接続のモック結果）。</p>
       ) : (
         <ul className="space-y-2">
-          {state.results.map((t: TrackMock) => (
+          {state.results.map((t: TrackMock) => {
+            const isAdded = existingIds.includes(t.id);
+            return (
             <li
               key={t.id}
               className="flex items-center justify-between rounded-md border border-foreground/10 p-2"
@@ -59,7 +63,9 @@ export default function SearchTracks({
                   </div>
                 </div>
               </div>
-              {onAdd ? (
+              {isAdded ? (
+                <span className="text-xs px-2 py-1 rounded bg-foreground/10 opacity-80">追加済み</span>
+              ) : onAdd ? (
                 <button
                   type="button"
                   onClick={() => onAdd(t)}
@@ -79,7 +85,8 @@ export default function SearchTracks({
                 </button>
               )}
             </li>
-          ))}
+            );
+          })}
         </ul>
       )}
     </section>

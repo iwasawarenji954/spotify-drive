@@ -142,7 +142,11 @@ export default function RoomClient({ partyId }: { partyId: string }) {
         </div>
       )}
 
-      <SearchTracks partyId={partyId} onAdd={onAdd} />
+      <SearchTracks
+        partyId={partyId}
+        onAdd={onAdd}
+        existingIds={[...(current ? [current.id] : []), ...queue.map((q) => q.id)]}
+      />
 
       <section className="rounded-lg border border-foreground/15 p-4">
         <div className="flex items-center justify-between mb-3">
