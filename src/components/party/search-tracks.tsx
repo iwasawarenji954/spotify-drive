@@ -4,7 +4,13 @@ import { useActionState } from "react";
 import type { SearchState, TrackMock } from "@/app/party/[partyId]/search-actions";
 import { searchTracksAction } from "@/app/party/[partyId]/search-actions";
 
-export default function SearchTracks({ partyId }: { partyId: string }) {
+export default function SearchTracks({
+  partyId,
+  onAdd,
+}: {
+  partyId: string;
+  onAdd?: (t: TrackMock) => void;
+}) {
   const initial: SearchState = { query: "", results: [] };
   const [state, formAction, pending] = useActionState(searchTracksAction, initial);
 
@@ -53,14 +59,25 @@ export default function SearchTracks({ partyId }: { partyId: string }) {
                   </div>
                 </div>
               </div>
-              <button
-                type="button"
-                disabled
-                title={`パーティー ${partyId} に追加（モック）`}
-                className="rounded-md border border-foreground/20 px-3 py-1.5 text-sm opacity-60"
-              >
-                追加（未実装）
-              </button>
+              {onAdd ? (
+                <button
+                  type="button"
+                  onClick={() => onAdd(t)}
+                  title={`パーティー ${partyId} に追加（モック）`}
+                  className="rounded-md border border-foreground/20 px-3 py-1.5 text-sm hover:bg-foreground/10"
+                >
+                  追加
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  disabled
+                  title={`パーティー ${partyId} に追加（モック）`}
+                  className="rounded-md border border-foreground/20 px-3 py-1.5 text-sm opacity-60"
+                >
+                  追加（未実装）
+                </button>
+              )}
             </li>
           ))}
         </ul>
@@ -68,4 +85,3 @@ export default function SearchTracks({ partyId }: { partyId: string }) {
     </section>
   );
 }
-
