@@ -167,6 +167,27 @@
 
 ---
 
+## 共有UI（ホスト向け・UIのみ）
+
+- `src/components/party/share-panel.tsx`
+  - 種別: 追加
+  - 役割: 参加コードと共有URLの表示・コピー機能を提供（モック）。
+  - 詳細: `window.location.origin` または `NEXT_PUBLIC_APP_URL` から共有URLを生成。クリップボードコピーで短いフィードバックを表示。
+
+- `src/app/party/[partyId]/page.tsx`
+  - 変更点: 共有パネル `<SharePanel partyId={partyId} />` を上部に追加。
+  - 目的: ホストが参加者に素早く共有できるUIを先行提供。
+
+---
+
+## 環境変数テンプレート更新
+
+- `.env.example`
+  - 変更点: 実値を削除しプレースホルダ化。`NEXT_PUBLIC_APP_URL` を追加（共有URLのベースに使用可能）。
+  - 目的: セキュアなテンプレート化と共有URL生成の安定化。
+
+---
+
 ## 環境変数（再掲）
 - `NEXTAUTH_URL`: 例 `http://127.0.0.1:3000`
 - `NEXTAUTH_SECRET`: ランダム文字列（例: `openssl rand -base64 32`）

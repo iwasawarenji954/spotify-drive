@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
 import RoomClient from "@/components/party/room-client";
+import SharePanel from "@/components/party/share-panel";
 
 export default async function PartyRoom({
   params,
@@ -16,6 +17,8 @@ export default async function PartyRoom({
   return (
     <div className="max-w-3xl mx-auto p-6 flex flex-col gap-6">
       <h1 className="text-xl font-semibold">パーティールーム #{partyId}</h1>
+
+      <SharePanel partyId={partyId} />
 
       <RoomClient partyId={partyId} />
     </div>
