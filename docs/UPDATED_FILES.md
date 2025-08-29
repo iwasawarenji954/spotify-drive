@@ -180,6 +180,18 @@
 
 ---
 
+## パーティーページでの存在確認（DBが有効な場合）
+
+- `src/app/party/[partyId]/page.tsx`
+  - 変更点: `DATABASE_URL` が設定されている場合、Prismaで `Party` を `code` で検索し、存在しなければ `notFound()` を表示。
+  - 目的: 無効な参加コードでのアクセス時に404を返し、UXを改善。
+
+- `src/app/party/[partyId]/not-found.tsx`
+  - 種別: 追加
+  - 役割: 404時の簡易ガイダンス（ダッシュボードへの導線）を提供。
+
+---
+
 ## 検索UI（モック）
 
 - `src/app/party/[partyId]/search-actions.ts`
