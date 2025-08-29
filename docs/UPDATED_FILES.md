@@ -79,11 +79,11 @@
   - 目的: 参加コード入力後、サーバーサイドで `/party/{code}` へ `redirect` できるよう修正。
 
 - `src/app/party/[partyId]/page.tsx`
-  - 変更点: `params` の型を `Promise` ではなく `{ partyId: string }` に修正し、`await` を除去。
-  - 目的: App Router の標準シグネチャに準拠してビルドエラーを解消。
+  - 変更点: Next.js v15 の型仕様に合わせて `params: Promise<{ partyId: string }>` を維持し、`await params` で取得する形に統一。
+  - 目的: Next.js の `PageProps` 互換性を満たしビルドを安定化。
 
 - `src/app/party/[partyId]/results/page.tsx`
-  - 変更点: 上記と同様に `params` の型と参照方法を修正。
+  - 変更点: 上記と同様に `params: Promise<{ partyId: string }>` を維持し、`await params` で取得する形に統一。
   - 目的: ビルド安定化。
 
 - `src/app/globals.css`

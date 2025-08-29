@@ -5,12 +5,12 @@ import { authOptions } from "@/lib/auth";
 export default async function PartyRoom({
   params,
 }: {
-  params: { partyId: string };
+  params: Promise<{ partyId: string }>;
 }) {
   const session = await getServerSession(authOptions);
   if (!session) redirect("/");
 
-  const { partyId } = params;
+  const { partyId } = await params;
 
   return (
     <div className="max-w-3xl mx-auto p-6 flex flex-col gap-6">
