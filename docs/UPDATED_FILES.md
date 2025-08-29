@@ -173,7 +173,8 @@
 - `src/components/party/share-panel.tsx`
   - 種別: 追加
   - 役割: 参加コードと共有URLの表示・コピー機能を提供（モック）。
-  - 詳細: `window.location.origin` または `NEXT_PUBLIC_APP_URL` から共有URLを生成。クリップボードコピーで短いフィードバックを表示。
+  - 更新: クリップボードコピー時にトースト通知（成功/失敗）を表示。
+  - 詳細: `window.location.origin` または `NEXT_PUBLIC_APP_URL` から共有URLを生成。
 
 - `src/app/party/[partyId]/page.tsx`
   - 変更点: 共有パネル `<SharePanel partyId={partyId} />` を上部に追加。
@@ -186,6 +187,25 @@
 - `.env.example`
   - 変更点: 実値を削除しプレースホルダ化。`NEXT_PUBLIC_APP_URL` を追加（共有URLのベースに使用可能）。
   - 目的: セキュアなテンプレート化と共有URL生成の安定化。
+
+---
+
+## トースト通知（軽量実装）
+
+- `src/components/ui/toast-provider.tsx`
+  - 種別: 追加
+  - 役割: クライアント側のトースト通知基盤。`useToast().show(message, { type, duration })` を提供。
+  - 表示: 画面下部に積層表示。`type` は `info`/`success`/`error`。
+
+- `src/app/layout.tsx`
+  - 変更点: `<ToastProvider>` を組み込み、全体でトーストが利用可能に。
+  - 目的: 追加/削除/コピーなどの操作にフィードバックを付与。
+
+- `src/components/party/room-client.tsx`
+  - 更新: キューへの追加/重複、削除時にトーストを表示。
+
+- `src/components/party/share-panel.tsx`
+  - 更新: コピー成功/失敗のトーストを表示。
 
 ---
 

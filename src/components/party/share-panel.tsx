@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useToast } from "@/components/ui/toast-provider";
 
 export default function SharePanel({ partyId }: { partyId: string }) {
   const shareUrl = useMemo(() => {
@@ -11,15 +12,14 @@ export default function SharePanel({ partyId }: { partyId: string }) {
     return base ? `${base.replace(/\/$/, "")}/party/${partyId}` : `/party/${partyId}`;
   }, [partyId]);
 
-  const [copied, setCopied] = useState<"code" | "url" | null>(null);
+  const toast = useToast();
 
   async function copy(text: string, kind: "code" | "url") {
     try {
       await navigator.clipboard.writeText(text);
-      setCopied(kind);
-      setTimeout(() => setCopied(null), 1500);
+      toast.show(kind === "code" ? "参加コードをコピーしました" : "共有URLをコピーしました", { type: "success" });
     } catch (_) {
-      // no-op
+      toast.show("コピーに失敗しました", { type: "error" });
     }
   }
 
@@ -39,9 +39,7 @@ export default function SharePanel({ partyId }: { partyId: string }) {
           >
             コピー
           </button>
-          {copied === "code" && (
-            <span className="text-xs text-[#1DB954]">コピーしました</span>
-          )}
+          
         </div>
 
         <div className="flex items-center gap-2">
@@ -56,9 +54,7 @@ export default function SharePanel({ partyId }: { partyId: string }) {
           >
             コピー
           </button>
-          {copied === "url" && (
-            <span className="text-xs text-[#1DB954]">コピーしました</span>
-          )}
+          
         </div>
       </div>
       <p className="mt-2 text-xs opacity-70">
@@ -67,4 +63,3 @@ export default function SharePanel({ partyId }: { partyId: string }) {
     </section>
   );
 }
-

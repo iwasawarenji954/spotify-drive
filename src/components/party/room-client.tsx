@@ -6,11 +6,13 @@ import LikeButton from "@/components/party/like-button";
 import SearchTracks from "@/components/party/search-tracks";
 import type { TrackMock } from "@/app/party/[partyId]/search-actions";
 import SharePanel from "@/components/party/share-panel";
+import { useToast } from "@/components/ui/toast-provider";
 
 export default function RoomClient({ partyId }: { partyId: string }) {
   const [queue, setQueue] = useState<TrackMock[]>([]);
   const [current, setCurrent] = useState<TrackMock | null>(null);
   const [isHost, setIsHost] = useState<boolean>(false);
+  const toast = useToast();
 
   // ホストモード: ローカルストレージで保持（疑似的な権限切り替え）
   useEffect(() => {
@@ -38,11 +40,15 @@ export default function RoomClient({ partyId }: { partyId: string }) {
   };
 
   const onAdd = (t: TrackMock) => {
+    let added = false;
     setQueue((prev) => {
       if (prev.some((p) => p.id === t.id)) return prev;
       if (current && current.id === t.id) return prev;
+      added = true;
       return [...prev, t];
     });
+    if (added) toast.show("キューに追加しました", { type: "success" });
+    else toast.show("すでに追加されています", { type: "info" });
   };
 
   const startPlayback = () => {
@@ -175,7 +181,10 @@ export default function RoomClient({ partyId }: { partyId: string }) {
                 </div>
                 <button
                   type="button"
-                  onClick={() => setQueue((prev) => prev.filter((p) => p.id !== t.id))}
+                  onClick={() => {
+                    setQueue((prev) => prev.filter((p) => p.id !== t.id));
+                    toast.show("キューから削除しました", { type: "info" });
+                  }}
                   className="text-xs rounded-md border border-foreground/20 px-2 py-1 hover:bg-foreground/10"
                 >
                   削除
