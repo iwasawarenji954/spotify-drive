@@ -18,7 +18,7 @@
 - `src/lib/auth.ts`
   - 種別: 追加
   - 役割: NextAuth の共通設定（Spotifyプロバイダ、JWTセッション、コールバック、シークレット）。
-  - 補足: JWT に `accessToken`/`refreshToken` を格納。`getServerSession` から再利用。
+  - 補足: JWT に `accessToken`/`refreshToken` を格納。`getServerSession` から再利用。`any` を使わない実装に修正（型ガードで `profile.id` を安全に抽出、`session`/`token` は型拡張で対応）。
 
 - `src/components/providers/session-provider.tsx`
   - 種別: 追加
@@ -93,6 +93,23 @@
 - `package.json`
   - 変更点: 依存関係に `next-auth` を追加。
   - 目的: NextAuth を利用した Spotify 認証のため。
+
+---
+
+## 追加ファイル（型拡張）
+
+- `src/types/next-auth.d.ts`
+  - 種別: 追加
+  - 役割: NextAuth の型拡張。`Session.user` に `id`/`accessToken` を追加し、`JWT` に `accessToken`/`refreshToken` を追加。
+  - 目的: ESLint の `@typescript-eslint/no-explicit-any` を回避しつつ、安全にトークン情報をやりとりするため。未使用インポート警告を避けるため `type` のみのインポートに修正。
+
+---
+
+## 設定変更
+
+- `tsconfig.json`
+  - 変更点: `include` に `**/*.d.ts` を追加。
+  - 目的: 型拡張（`src/types/next-auth.d.ts`）をTypeScriptのコンパイル対象に含めるため。
 
 ---
 

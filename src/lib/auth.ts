@@ -18,18 +18,21 @@ export const authOptions: NextAuthOptions = {
         token.refreshToken = account.refresh_token;
       }
       if (profile && typeof profile === "object" && "id" in profile) {
-        token.sub = String((profile as any).id);
+        const maybeId = (profile as { id?: unknown } | null | undefined)?.id;
+        if (typeof maybeId === "string" || typeof maybeId === "number") {
+          token.sub = String(maybeId);
+        }
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.sub;
-        (session.user as any).accessToken = (token as any).accessToken;
+        session.user.id = typeof token.sub === "string" ? token.sub : undefined;
+        session.user.accessToken =
+          typeof token.accessToken === "string" ? token.accessToken : undefined;
       }
       return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
-
