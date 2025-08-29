@@ -133,6 +133,53 @@
 
 ---
 
+## データ接続準備（Prisma Client導入のみ）
+
+- `package.json`
+  - 変更点: スクリプト追加 `prisma:generate` / `prisma:validate` / `prisma:studio`。
+  - 目的: ローカルでのPrisma操作を簡易化。
+
+- 依存関係
+  - 追加: `@prisma/client`（dependencies）、`prisma`（devDependencies）
+  - 目的: Prisma Client の利用準備（現時点ではアプリ未接続のためビルド影響なし）。
+
+- `src/lib/prisma.ts`
+  - 種別: 追加
+  - 役割: Prisma Client のシングルトン初期化（開発時の多重生成を回避）。
+  - 備考: まだアプリからインポートしていないため、生成未実行でもビルド可能。
+
+- `.env.example`
+  - 変更点: `DATABASE_URL` を追記（PostgreSQL/Supabaseの接続例コメント付き）。
+  - 目的: 接続時の環境変数を明示。
+
+---
+
+## Supabase セットアップ手順（ドキュメント）
+
+- `docs/SUPABASE_SETUP.md`
+  - 種別: 追加
+  - 役割: Supabase のテーブル作成方法（SQL実行／Prisma db push）、環境変数設定、動作確認手順を整理。
+  - 目的: Supabase 側の初期構築をスムーズに進めるための手引き。
+
+---
+
+## DB 接続（パーティー作成の保存・任意）
+
+- `src/app/party/create/actions.ts`
+  - 種別: 追加
+  - 役割: サーバーアクションでパーティーを作成。`DATABASE_URL` が設定されている場合は Prisma で `Party` レコードを作成（`code` のユニーク衝突は再生成で最大5回リトライ）。未設定/失敗時はDB保存をスキップしてコード生成のみで遷移。
+  - リダイレクト: 成功/スキップに関わらず `/party/{code}` へ。
+
+- `src/app/party/create/page.tsx`
+  - 変更点: 既存のモック生成から `createPartyAction` を呼ぶように変更。
+  - 目的: DBが用意されていれば保存、なければ従来通りのモック挙動でデプロイ可能性を維持。
+
+- `.github/workflows/ci.yml`
+  - 変更点: `Prisma generate` ステップを追加。
+  - 目的: CI 環境でも Prisma Client の型生成を確実に実行し、ビルド安定性を向上。
+
+---
+
 ## 検索UI（モック）
 
 - `src/app/party/[partyId]/search-actions.ts`

@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
+import { createPartyAction } from "./actions";
 
 export default async function CreatePartyPage() {
   const session = await getServerSession(authOptions);
@@ -11,14 +12,7 @@ export default async function CreatePartyPage() {
       <h1 className="text-xl font-semibold">パーティーを作成</h1>
       <p className="opacity-70">まずはモックとして参加コードを自動生成します。</p>
 
-      <form
-        action={async () => {
-          "use server";
-          // モック: 6文字の英数字コードを生成して遷移
-          const code = Math.random().toString(36).slice(2, 8).toUpperCase();
-          redirect(`/party/${code}`);
-        }}
-      >
+      <form action={createPartyAction}>
         <button
           type="submit"
           className="rounded-md bg-foreground text-background px-4 py-2"

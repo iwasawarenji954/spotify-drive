@@ -42,3 +42,12 @@
 ## 注意
 - まだアプリコードからは使用していません。`DATABASE_URL` の設定や `prisma migrate` は、接続時のフェーズで導入します。
 - 既存データとの互換が必要になった場合は、マイグレーション方針を `docs/DATABASE.md` に追記します。
+
+## Prisma Client の準備（任意・ローカル）
+- 依存関係: `@prisma/client`（prod）、`prisma`（dev）を追加済み。
+- 環境変数: `.env.local` に `DATABASE_URL` を設定。
+- 生成: `npm run prisma:generate`
+- 検証: `npm run prisma:validate`
+- Studio: `npm run prisma:studio`
+
+注意: 本リポジトリでは `src/lib/prisma.ts` を用意していますが、現時点でアプリから未参照のため、生成前でもビルド可能です。
