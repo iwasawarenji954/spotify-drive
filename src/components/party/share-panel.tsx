@@ -35,7 +35,7 @@ export default function SharePanel({ partyId }: { partyId: string }) {
           <button
             type="button"
             onClick={() => copy(partyId, "code")}
-            className="ml-auto rounded-md border border-foreground/20 px-2 py-1 text-xs hover:bg-foreground/10"
+            className="ml-auto rounded-md border border-foreground/20 px-2 py-1 text-xs hover:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             コピー
           </button>
@@ -50,7 +50,7 @@ export default function SharePanel({ partyId }: { partyId: string }) {
           <button
             type="button"
             onClick={() => copy(shareUrl, "url")}
-            className="ml-auto rounded-md border border-foreground/20 px-2 py-1 text-xs hover:bg-foreground/10"
+            className="ml-auto rounded-md border border-foreground/20 px-2 py-1 text-xs hover:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             コピー
           </button>

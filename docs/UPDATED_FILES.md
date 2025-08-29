@@ -209,6 +209,25 @@
 
 ---
 
+## UI 微調整（アクセシビリティ/配色）
+
+- `src/app/globals.css`
+  - 変更点: ダークテーマの背景/前景をSpotifyガイドラインに合わせて `#191414` / `#FFFFFF` に調整。
+  - 目的: 視認性とブランド一貫性の向上。
+
+- フォーカスリングの追加
+  - 対象: 各種ボタン（ログイン/サインアウト/検索送信/追加/削除/再生開始/次へ/コピー/いいね）
+  - 目的: キーボード操作時の焦点可視化（アクセシビリティ向上）。
+  - 変更ファイル:
+    - `src/components/auth/sign-in-button.tsx`
+    - `src/components/auth/sign-out-button.tsx`
+    - `src/components/party/search-tracks.tsx`
+    - `src/components/party/room-client.tsx`
+    - `src/components/party/share-panel.tsx`
+    - `src/components/party/like-button.tsx`
+
+---
+
 ## CI 追加
 
 - `.github/workflows/ci.yml`

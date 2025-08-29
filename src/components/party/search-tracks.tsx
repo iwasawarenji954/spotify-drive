@@ -31,7 +31,7 @@ export default function SearchTracks({
         <button
           type="submit"
           disabled={pending}
-          className="rounded-md bg-foreground text-background px-4 py-2 disabled:opacity-50"
+          className="rounded-md bg-foreground text-background px-4 py-2 disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           {pending ? "検索中..." : "検索"}
         </button>
@@ -70,7 +70,7 @@ export default function SearchTracks({
                   type="button"
                   onClick={() => onAdd(t)}
                   title={`パーティー ${partyId} に追加（モック）`}
-                  className="rounded-md border border-foreground/20 px-3 py-1.5 text-sm hover:bg-foreground/10"
+                  className="rounded-md border border-foreground/20 px-3 py-1.5 text-sm hover:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   追加
                 </button>

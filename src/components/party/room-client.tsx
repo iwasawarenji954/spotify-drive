@@ -131,7 +131,7 @@ export default function RoomClient({ partyId }: { partyId: string }) {
             <button
               type="button"
               onClick={startPlayback}
-              className="rounded-md bg-foreground text-background px-4 py-2"
+              className="rounded-md bg-foreground text-background px-4 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               再生開始
             </button>
@@ -140,7 +140,7 @@ export default function RoomClient({ partyId }: { partyId: string }) {
             <button
               type="button"
               onClick={nextTrack}
-              className="rounded-md border border-foreground/20 px-4 py-2 hover:bg-foreground/10"
+              className="rounded-md border border-foreground/20 px-4 py-2 hover:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               次の曲へ
             </button>
@@ -185,7 +185,7 @@ export default function RoomClient({ partyId }: { partyId: string }) {
                     setQueue((prev) => prev.filter((p) => p.id !== t.id));
                     toast.show("キューから削除しました", { type: "info" });
                   }}
-                  className="text-xs rounded-md border border-foreground/20 px-2 py-1 hover:bg-foreground/10"
+                  className="text-xs rounded-md border border-foreground/20 px-2 py-1 hover:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
                   削除
                 </button>
