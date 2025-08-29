@@ -188,6 +188,16 @@
 
 ---
 
+## CI 追加
+
+- `.github/workflows/ci.yml`
+  - 種別: 追加
+  - 役割: GitHub Actions で `npm ci` → `npm run lint` → `npm run build` を実行。
+  - 詳細: Node.js 20 を使用。テレメトリ無効化。ビルドに必要な環境変数はダミー値を付与（`NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `NEXT_PUBLIC_APP_URL`）。
+  - 目的: すべてのPR/Pushで「デプロイ可能性（lint/build通過）」を自動チェック。
+
+---
+
 ## 環境変数（再掲）
 - `NEXTAUTH_URL`: 例 `http://127.0.0.1:3000`
 - `NEXTAUTH_SECRET`: ランダム文字列（例: `openssl rand -base64 32`）
