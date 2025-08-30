@@ -219,7 +219,8 @@
 
 - `src/components/party/like-button.tsx`
   - 種別: 追加
-  - 役割: 「いいね！」ボタンとカウント表示のクライアントコンポーネント。内部状態で加算、永続化やリアルタイムは未実装。
+  - 役割: 「いいね！」ボタンとカウント表示のクライアントコンポーネント。
+  - 更新: `onLike`（サーバーアクション連携）/`disabled` に対応。サーバーから返る合計数で更新し、以後は無効化。
 
 - `src/app/party/[partyId]/page.tsx`
   - 変更点: 上記の `NowPlaying` と `LikeButton` を組み込み、骨組みを表示。
@@ -314,6 +315,26 @@
   - 種別: 追加
   - 役割: ルーム内のクライアント状態を一元管理（キュー/再生中/いいね/検索の連携）。
   - 更新: 「再生開始」「次の曲へ」ボタンを追加。再生中は別状態`current`で保持し、キュー先頭を取り出して進行。重複追加は回避、キューからの削除に対応。
+  - 追記1: `likeCurrentTrackAction` と連携し、DB接続時は投票を保存。1ユーザー1票のため、以後はボタンを無効化。
+  - 追記2: 曲切替時に `getLikeCountAction` でDBから初期いいね数を取得し、`LikeButton` の初期表示に反映（キーで再マウント）。
+  - 追記: `likeCurrentTrackAction` と連携し、DB接続時は投票を保存。1ユーザー1票のため、以後はボタンを無効化。
+
+---
+
+## Like（1ユーザー1票）
+
+- `prisma/schema.prisma`
+  - 変更点: `Like` モデルに `@@unique([partyTrackId, userId])` を追加（PostgreSQLでは `userId` がNULLの場合は複数可）。
+  - 目的: 1ユーザー1票の整合性をDBで担保。
+
+- `supabase/migrations/001_add_like_unique.sql`
+  - 種別: 追加
+  - 役割: 既存DBに対してユニークインデックスを追加（`likes(party_track_id, user_id)`）。
+
+- `src/app/party/[partyId]/track-actions.ts`
+  - 種別: 追加
+  - 役割: サーバーアクションで「現在の曲にいいね」処理を実行。
+  - 詳細: `Party` をコードで取得→`PartyTrack` を upsert→`Like` を作成（重複時は握りつぶし）→合計件数を返却。
   - 追記: 検索UIへ `existingIds` を供給し、検索結果に「追加済み」を反映。
 
 ---

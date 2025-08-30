@@ -46,5 +46,6 @@ model Like {
   createdAt    DateTime @default(now())
 
   partyTrack   PartyTrack @relation(fields: [partyTrackId], references: [id], onDelete: Cascade)
-}
 
+  @@unique([partyTrackId, userId])
+}

@@ -7,12 +7,15 @@ import SearchTracks from "@/components/party/search-tracks";
 import type { TrackMock } from "@/app/party/[partyId]/search-actions";
 import SharePanel from "@/components/party/share-panel";
 import { useToast } from "@/components/ui/toast-provider";
+import { likeCurrentTrackAction, getLikeCountAction } from "@/app/party/[partyId]/track-actions";
 
 export default function RoomClient({ partyId }: { partyId: string }) {
   const [queue, setQueue] = useState<TrackMock[]>([]);
   const [current, setCurrent] = useState<TrackMock | null>(null);
   const [isHost, setIsHost] = useState<boolean>(false);
   const toast = useToast();
+  const [liked, setLiked] = useState<boolean>(false);
+  const [likeCount, setLikeCount] = useState<number>(0);
 
   // ホストモード: ローカルストレージで保持（疑似的な権限切り替え）
   useEffect(() => {
@@ -56,6 +59,8 @@ export default function RoomClient({ partyId }: { partyId: string }) {
       if (prev.length === 0) return prev;
       const [head, ...rest] = prev;
       setCurrent(head);
+      setLiked(false);
+      setLikeCount(0);
       return rest;
     });
   };
@@ -64,13 +69,29 @@ export default function RoomClient({ partyId }: { partyId: string }) {
     setQueue((prev) => {
       if (prev.length === 0) {
         setCurrent(null);
+        setLiked(false);
+        setLikeCount(0);
         return prev;
       }
       const [head, ...rest] = prev;
       setCurrent(head);
+      setLiked(false);
+      setLikeCount(0);
       return rest;
     });
   };
+
+  // Fetch initial like count from DB when current track changes
+  useEffect(() => {
+    const run = async () => {
+      if (!current) return;
+      const res = await getLikeCountAction({ partyCode: partyId, trackId: current.id });
+      if (res.ok) setLikeCount(res.total);
+      else if (res.error === "NO_DB") setLikeCount(0);
+      else setLikeCount(0);
+    };
+    run();
+  }, [current, partyId]);
 
   const hasQueue = queue.length > 0;
   const queueCount = queue.length;
@@ -123,7 +144,36 @@ export default function RoomClient({ partyId }: { partyId: string }) {
         </section>
       )}
 
-      {current && <LikeButton trackId={current.id} initialCount={0} />}
+      {current && (
+        <LikeButton
+          key={`like-${current.id}`}
+          trackId={current.id}
+          initialCount={likeCount}
+          disabled={liked}
+          onLike={async () => {
+            if (!current) return null;
+            const res = await likeCurrentTrackAction({ partyCode: partyId, trackId: current.id });
+            if (res.ok) {
+              setLiked(true);
+              return { total: res.total, liked: true };
+            }
+            if (res.error === "NO_DB") {
+              toast.show("DB未接続のためローカルカウントで処理しました", { type: "info" });
+              return null;
+            }
+            if (res.error === "UNAUTHENTICATED") {
+              toast.show("ログインが必要です", { type: "error" });
+              return null;
+            }
+            if (res.error === "NOT_FOUND") {
+              toast.show("パーティーが見つかりません", { type: "error" });
+              return null;
+            }
+            toast.show("エラーが発生しました", { type: "error" });
+            return null;
+          }}
+        />
+      )}
 
       {isHost && (
         <div className="flex gap-2">
